@@ -1,0 +1,31 @@
+{
+  "name": "rx-state-utils",
+  "version": "1.0.0",
+  "description": "Utilities for State Management using RxJS",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/index.ts --bundle --outfile=dist/bundle.js --minify --sourcemap --external:rxjs",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": "",
+  "keywords": [
+    "rxjs",
+    "state management"
+  ],
+  "author": "Harsh Rohila",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "0.20.2",
+    "rxjs": "7"
+  },
+  "peerDependencies": {
+    "rxjs": "7"
+  },
+  "volta": {
+    "node": "20.12.0"
+  }
+}
