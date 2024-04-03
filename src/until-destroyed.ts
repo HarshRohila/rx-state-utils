@@ -15,7 +15,11 @@ export function untilDestroyed<T>(instance: T, destroyMethodName: string) {
 function overrideDestroyMethod<T>(instance: T, destroyMethodName: string, symbol: symbol) {
   const originalDestroy = instance[destroyMethodName]
 
-  instance[destroyMethodName] = function () {
+  const setDestroyMethod = (method: () => void) => {
+    instance[destroyMethodName] = method
+  }
+
+  setDestroyMethod(function () {
     // eslint-disable-next-line prefer-rest-params
     originalDestroy && originalDestroy.apply(this, arguments)
     completeSubjectOnTheInstance(this, symbol)
@@ -23,8 +27,8 @@ function overrideDestroyMethod<T>(instance: T, destroyMethodName: string, symbol
     // If the `untilDestroyed` operator is called for the same instance
     // multiple times, then we will be able to get the original
     // method again and not the patched one.
-    instance[destroyMethodName] = originalDestroy
-  }
+    setDestroyMethod(originalDestroy)
+  })
 }
 
 function getSymbol(destroyMethodName: string) {
