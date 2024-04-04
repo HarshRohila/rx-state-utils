@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, Subject } from "rxjs"
-import { untilDestroyed } from "./until-destroyed"
+import { untilDestroyed } from "./lib/until-destroyed"
 
 function initComponentUtil({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
