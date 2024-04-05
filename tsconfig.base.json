@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@rx-state-utils/js": ["libs/js/src/index.ts"],
-      "@rx-state-utils/preact": ["libs/preact/src/index.ts"]
+      "@rx-state-utils/preact": ["libs/preact/src/index.ts"],
+      "@rx-state-utils/react": ["libs/react/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
