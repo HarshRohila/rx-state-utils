@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { Observable, Observer, Subject, takeUntil } from 'rxjs';
-
-export { createState } from '@rx-state-utils/js';
+import { createState } from './lib/state-mgt';
 
 function useJustSubscribe(...observables: Observable<unknown>[]) {
   useEffect(() => {
@@ -18,10 +17,7 @@ function useJustSubscribe(...observables: Observable<unknown>[]) {
   }, []);
 }
 
-function useSubscribe<T>(
-  obs: Observable<T>,
-  callback: Partial<Observer<T>> | ((value: T) => void)
-) {
+function useSubscribe<T>(obs: Observable<T>, callback: Partial<Observer<T>> | ((value: T) => void)) {
   useEffect(() => {
     const destroy$ = new Subject<void>();
 
@@ -54,10 +50,8 @@ function useEvent<U, T = U>(
   return [event.asObservable(), handler];
 }
 
-function useVoidEvent<T>(
-  { once }: { once: boolean } = { once: false }
-): [Observable<void>, (ev: T) => void] {
+function useVoidEvent<T>({ once }: { once: boolean } = { once: false }): [Observable<void>, (ev: T) => void] {
   return useEvent<T, void>(() => undefined, { once });
 }
 
-export { useJustSubscribe, useSubscribe, useEvent, useVoidEvent };
+export { useJustSubscribe, useSubscribe, useEvent, useVoidEvent, createState };
