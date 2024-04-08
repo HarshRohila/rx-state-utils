@@ -1,11 +1,163 @@
-# react
+# Rx State Utils - React
 
-This library was generated with [Nx](https://nx.dev).
+- Simple utilities to use state management based on React.
+- This allows framework independent state management, by separating State and App Logic from view-layer, so it can be easy to migrate Frontend frameworks/libraries.
+- To use this library you need to be familiar with RxJS
 
-## Building
+## Basic Idea of State Management with RxJS
 
-Run `nx build react` to build the library.
+Components will emit events and will subscribe(or listen) to state changes. Components can also subscribe to features (explained below).
 
-## Running unit tests
+To react to events emitted by components, we need to convert events to `Observable`. For that `useEvent` hook is provided.
 
-Run `nx test react` to execute the unit tests via [Vitest](https://vitest.dev/).
+## Events
+
+Consider below Example component
+
+```jsx
+function Example() {
+  const [text$, textChangeHandler] = useEvent((ev) => ev.target.value)
+
+  return <input type="text" onInput={textChangeHandler} value={text} />
+}
+```
+
+`useEvent` returns 2 values, first is the Observable value and second is the handler which you can attach to your element. It also accepts an optional callback, which you can use to map incoming event to some value.
+
+In example above,
+
+- Event handler `textChangeHandler` is attached to input of type text.
+- Event is mapped to target's text value.
+- `text$` is Observable
+
+TypeScript example looks like below
+
+```tsx
+function Example() {
+  const [text$, textChangeHandler] = useEvent<React.FormEvent<HTMLInputElement>, string>(
+    (ev) => (ev.target as HTMLInputElement)['value']
+  )
+
+  return <input type="text" onInput={textChangeHandler} value={text} />
+}
+```
+
+## State
+
+- To create state use `createState`. This should be in separate file than component to separate state from view. Here, I will name the file `facaode.ts`
+
+```js
+// facade.ts
+const state = createState({
+  todos: [],
+  text: '',
+})
+```
+
+In TypeScript,
+
+```ts
+// facade.ts
+const state = createState<State>({
+  todos: [] as Todo[],
+  text: '',
+})
+export { state }
+```
+
+You can export this state and component can subscribe to this state and update its internal state using it.
+
+```tsx
+import { useSubscribe } from '@rx-state-utils/react'
+import { state } from './facade'
+import { useState } from 'react'
+
+const [todos, setTodos] = useState([])
+const [text, setText] = useState('')
+// Update Framework state, so it can update its view
+useSubscribe(state.asObservable(), (state) => {
+  setTodos(state.todos)
+  setText(state.text)
+})
+```
+
+Above example,
+
+- is using `useSubscribe` to subscribe to `state.asObservable()`. `useSubscribe` automatically unsubscribes on component destroy to prevent memory leaks.
+
+> Note: We need to update react's state so it knows when to update its view. Ideally a component should only set React's state once in this way. We will update the state created with `createState` only(not the React's state) and those will get applied to React's state with this subscription.
+
+## Available State operations
+
+You can do following with the state created with `createState`
+
+- Update
+
+  ```ts
+  state.update({ text: 'new text' })
+  ```
+
+  - This will immutably update the text property of the state.
+  - To use current state while updating current state you can do the following.
+
+  ```ts
+  state.update((currentState) => ({
+    todos: [...currentState.todos, todo], // add a todo in current todos
+    text: '',
+  }))
+  ```
+
+- Get Current State
+
+  ```ts
+  const currentState = state.get()
+  ```
+
+- State as observable, to which component can subscribe to
+
+  ```ts
+  const state$ = state.asObservable()
+  ```
+
+## Example usage in a React App
+
+- You can define features in facade.ts file like below, and the component can subscribe to the features.
+
+```ts
+// facade.ts
+const Features = {
+  addTodo(add$: Observable<void>) {
+    return add$.pipe(
+      map(() => todoCreator.createTodo({ text: state.get().text })),
+      tap((todo) => {
+        state.update((currentState) => ({
+          todos: [...currentState.todos, todo],
+          text: '',
+        }))
+      })
+    )
+  },
+  setText(text$: Observable<string>) {
+    return text$.pipe(
+      tap((text) => {
+        state.update({ text })
+      })
+    )
+  },
+}
+
+export { Features }
+```
+
+```tsx
+// Example.tsx
+import { useJustSubscribe } from '@rx-state-utils/react'
+
+function Example() {
+  useJustSubscribe(Features.setText(text$), Features.addTodo(add$))
+}
+```
+
+- `useJustSubscribe` hook is used to just subscribe and don't do anything else. Like `useSubscribe`, it will also auto-unsubscribe on component destroy.
+- Using this way we have state and its update logic in `facade.ts` file separated from component/view-layer `Example.tsx` file.
+- Now, in future, if you want to migrate to other view-layer or Frontend-framework, you just need to update component file and subscribe to state and features and emit Observable Events, the `facade.ts` file can remain the same.
