@@ -1,9 +1,10 @@
 # Rx State Utils
 
 - Simple utilities to use state management based on RxJS.
-- This is meant to be used in apps using class-based components, like [Stencil.js](https://stenciljs.com/)
+- This is meant to be used in apps using class-based components, like [Stencil.js](https://stenciljs.com/). If you are using React, you should use [@rx-state-utils/react](https://www.npmjs.com/package/@rx-state-utils/react)
 - It allows writing more declarative code, separating side-effects from pure functions.
 - This allows framework independent state management, by separating State and App Logic from view-layer, so it can be easy to migrate Frontend frameworks/libraries.
+- This is used in my [youtube-frontend project - PipedRx](https://github.com/HarshRohila/youtube-frontend)
 
 ## Basic Idea of State Management with RxJS
 
@@ -70,6 +71,8 @@ class Example() {
 
 ```js
 // facade.ts
+import { createState } from '@rx-state-utils/js'
+
 const state = createState({
   todos: [],
   text: '',
@@ -80,6 +83,8 @@ In TypeScript,
 
 ```ts
 // facade.ts
+import { createState } from '@rx-state-utils/js'
+
 const state = createState<State>({
   todos: [] as Todo[],
   text: '',
@@ -111,6 +116,8 @@ Now you can use exported `componentUtil` in your components for subscribing to O
 > Note: we are writing below logic in `componentWillLoad` in case of Stencil.js. In other frameworks, usually, it would be the Component's method which gets called once on first load.
 
 ```tsx
+import { componentUtil } from './stat-mgt.ts'
+
 class Example() {
 	componentWillLoad() {
 		const component = componentUtil(this)

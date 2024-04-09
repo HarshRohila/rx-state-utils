@@ -1,8 +1,11 @@
 {
   "name": "@rx-state-utils/js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "main": "./index.js",
   "module": "./index.mjs",
-  "typings": "./index.d.ts"
+  "typings": "./index.d.ts",
+  "peerDependencies": {
+    "rxjs": "7.x"
+  }
 }
