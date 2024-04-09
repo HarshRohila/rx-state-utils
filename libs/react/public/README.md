@@ -16,6 +16,8 @@ We can convert Component events to Observables so that we can use RxJS operators
 Consider below Example component
 
 ```jsx
+import { useEvent } from '@rx-state-utils/react'
+
 function Example() {
   const [text$, textChangeHandler] = useEvent((ev) => ev.target.value)
 
@@ -34,6 +36,8 @@ In example above,
 TypeScript example looks like below
 
 ```tsx
+import { useEvent } from '@rx-state-utils/react'
+
 function Example() {
   const [text$, textChangeHandler] = useEvent<React.FormEvent<HTMLInputElement>, string>(
     (ev) => (ev.target as HTMLInputElement)['value']
@@ -49,6 +53,8 @@ function Example() {
 
 ```js
 // facade.ts
+import { createState } from '@rx-state-utils/react'
+
 const state = createState({
   todos: [],
   text: '',
@@ -58,6 +64,7 @@ const state = createState({
 In TypeScript,
 
 ```ts
+import { createState } from '@rx-state-utils/react'
 // facade.ts
 const state = createState<State>({
   todos: [] as Todo[],
