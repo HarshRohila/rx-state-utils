@@ -1,5 +1,6 @@
-import { BehaviorSubject, Observable, Subject } from "rxjs"
-import { untilDestroyed } from "./until-destroyed"
+import { Observable, Observer, Subject } from 'rxjs'
+import { untilDestroyed } from './lib/until-destroyed'
+import { createState } from './lib/state-mgt'
 
 function initComponentUtil({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
@@ -8,10 +9,13 @@ function initComponentUtil({ componentDestroyHandlerName }: { componentDestroyHa
         return anyObservable.pipe(untilDestroyed(componentContext, componentDestroyHandlerName))
       },
       justSubscribe(...observables: Observable<unknown>[]) {
-        observables.forEach(obs => {
+        observables.forEach((obs) => {
           pub.untilDestroyed(obs).subscribe()
         })
-      }
+      },
+      subscribe<T>(anyObservable: Observable<T>, callback: Partial<Observer<T>> | ((value: T) => void)) {
+        return anyObservable.pipe(pub.untilDestroyed).subscribe(callback)
+      },
     }
 
     return pub
@@ -34,38 +38,12 @@ function createEvent<U, T = U>(mapper?: (sourceEvent: U) => T, { once }: { once:
 
   return {
     $: event.asObservable(),
-    handler
+    handler,
   }
 }
 
 function createVoidEvent<T>({ once }: { once: boolean } = { once: false }) {
   return createEvent<T, void>(() => undefined, { once })
-}
-
-function createState<T>(initialState: T) {
-  type GetPartialState = (currentState: T) => Partial<T>
-
-  const state$ = new BehaviorSubject<T>(initialState)
-
-  return {
-    update(newState: Partial<T> | GetPartialState) {
-      let getNewState: GetPartialState
-
-      if (typeof newState !== "function") {
-        getNewState = () => newState
-      } else {
-        getNewState = newState
-      }
-
-      state$.next({ ...state$.value, ...getNewState(state$.value) })
-    },
-    get() {
-      return state$.value
-    },
-    asObservable() {
-      return state$.asObservable()
-    }
-  }
 }
 
 export { initComponentUtil, createEvent, createVoidEvent, createState }

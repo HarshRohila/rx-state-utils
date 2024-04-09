@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rx-state-utils/js": ["libs/js/src/index.ts"],
+      "@rx-state-utils/preact": ["libs/preact/src/index.ts"],
+      "@rx-state-utils/react": ["libs/react/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
