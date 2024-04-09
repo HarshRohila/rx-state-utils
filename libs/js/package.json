@@ -1,6 +1,7 @@
 {
   "name": "@rx-state-utils/js",
   "version": "0.0.4",
+  "description": "Utilities for State Management using RxJS",
   "dependencies": {},
   "main": "./index.js",
   "module": "./index.mjs",
@@ -11,6 +12,8 @@
     "Stencil.js",
     "Class Components"
   ],
+  "author": "Harsh Rohila",
+  "repository": "https://github.com/HarshRohila/rx-state-utils",
   "peerDependencies": {
     "rxjs": "7.x"
   }
