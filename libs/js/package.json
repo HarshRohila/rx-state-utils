@@ -1,10 +1,16 @@
 {
   "name": "@rx-state-utils/js",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "dependencies": {},
   "main": "./index.js",
   "module": "./index.mjs",
   "typings": "./index.d.ts",
+  "keywords": [
+    "State Management",
+    "RxJS",
+    "Stencil.js",
+    "Class Components"
+  ],
   "peerDependencies": {
     "rxjs": "7.x"
   }
