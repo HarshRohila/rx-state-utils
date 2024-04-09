@@ -4,10 +4,20 @@
 - It allows writing more declarative code, separating side-effects from pure functions.
 - This allows framework independent state management, by separating State and App Logic from view-layer, so it can be easy to migrate Frontend frameworks/libraries.
 
+## Projects using this Library
+
+- [Todo App - Edit on StackBlitz](https://stackblitz.com/edit/vitejs-vite-5qnba2?file=src%2FApp.tsx)
+- [Todo App - GitHub](https://github.com/HarshRohila/rx-state-utils/tree/master/react-example)
+
 ## Basic Idea of State Management with RxJS
 
 - Components will emit events and will subscribe(or listen) to state changes.
 - Components can also subscribe to Features (explained below). Features will take events Observable as inputs and will have logic for updating state.
+
+## Install
+
+- This library is having peer dependencies, rxjs and react, make sure you have them in your project.
+- `npm i @rx-state-utils/react`
 
 ## Events
 

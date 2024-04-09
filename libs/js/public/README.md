@@ -11,6 +11,11 @@
 - Components will emit events and will subscribe(or listen) to state changes.
 - Components can also subscribe to Features (explained below). Features will take events Observable as inputs and will have logic for updating state.
 
+## Install
+
+- This library is having "rxjs" as peer dependency.
+- `npm i @rx-state-utils/js`
+
 ## Events
 
 We can convert Component events to Observables so that we can use RxJS operators on them. That will make code more declarative. To convert Events to Observables `createEvent` function is provided.
