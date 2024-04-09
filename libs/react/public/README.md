@@ -1,16 +1,17 @@
 # Rx State Utils - React
 
-- Simple utilities to use state management based on React.
+- Simple utilities to use state management based on RxJS.
+- It allows writing more declarative code, separating side-effects from pure functions.
 - This allows framework independent state management, by separating State and App Logic from view-layer, so it can be easy to migrate Frontend frameworks/libraries.
-- To use this library you need to be familiar with RxJS
 
 ## Basic Idea of State Management with RxJS
 
-Components will emit events and will subscribe(or listen) to state changes. Components can also subscribe to features (explained below).
-
-To react to events emitted by components, we need to convert events to `Observable`. For that `useEvent` hook is provided.
+- Components will emit events and will subscribe(or listen) to state changes.
+- Components can also subscribe to Features (explained below). Features will take events Observable as inputs and will have logic for updating state.
 
 ## Events
+
+We can convert Component events to Observables so that we can use RxJS operators on them. That will make code more declarative. To convert Events to Observables `useEvent` hook is provided.
 
 Consider below Example component
 
@@ -44,7 +45,7 @@ function Example() {
 
 ## State
 
-- To create state use `createState`. This should be in separate file than component to separate state from view. Here, I will name the file `facaode.ts`
+- To create state use `createState`. This should be in separate file than component to separate state from view. Here, I will name the file `facade.ts`
 
 ```js
 // facade.ts
@@ -85,11 +86,11 @@ Above example,
 
 - is using `useSubscribe` to subscribe to `state.asObservable()`. `useSubscribe` automatically unsubscribes on component destroy to prevent memory leaks.
 
-> Note: We need to update react's state so it knows when to update its view. Ideally a component should only set React's state once in this way. We will update the state created with `createState` only(not the React's state) and those will get applied to React's state with this subscription.
+> Note: We need to update React's state so it knows when to update its view. Ideally a component should only set React's state once in this way. We will update the state created with `createState` only(not the React's state) and those will get applied to React's state with this subscription.
 
 ## Available State operations
 
-You can do following with the state created with `createState`
+You can do the following with the State created with `createState`
 
 - Update
 
@@ -159,5 +160,6 @@ function Example() {
 ```
 
 - `useJustSubscribe` hook is used to just subscribe and don't do anything else. Like `useSubscribe`, it will also auto-unsubscribe on component destroy.
-- Using this way we have state and its update logic in `facade.ts` file separated from component/view-layer `Example.tsx` file.
-- Now, in future, if you want to migrate to other view-layer or Frontend-framework, you just need to update component file and subscribe to state and features and emit Observable Events, the `facade.ts` file can remain the same.
+- Using this way we have side-effects separated in `tap` operators.
+- The state and its update logic in `facade.ts` file are separated from component/view-layer `Example.tsx` file.
+- Now, in future, if we want to migrate to other view-layer or Frontend-framework, we just need to update component file and subscribe to state and features and emit Observable Events, the `facade.ts` file can remain the same.
