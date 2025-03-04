@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs'
 
 type State<T extends Record<string, unknown>> = ReturnType<typeof createState<T>>
-type ReadOnlyState<T extends Record<string, unknown>> = Omit<State<T>, 'update'>
+type ReadOnlyState<T extends Record<string, unknown>> = Pick<State<T>, 'get' | 'asObservable'>
 
 function createState<T extends Record<string, unknown>>(initialState: T) {
   type GetPartialState = (currentState: T) => Partial<T>
