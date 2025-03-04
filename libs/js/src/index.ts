@@ -1,6 +1,6 @@
 import { Observable, Observer, Subject } from 'rxjs'
 import { untilDestroyed } from './lib/until-destroyed'
-import { createState } from './lib/state-mgt'
+import { createState, ReadOnlyState, State } from './lib/state-mgt'
 
 function initComponentUtil({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
@@ -47,3 +47,4 @@ function createVoidEvent<T>({ once }: { once: boolean } = { once: false }) {
 }
 
 export { initComponentUtil, createEvent, createVoidEvent, createState }
+export type { ReadOnlyState, State }

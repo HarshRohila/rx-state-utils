@@ -1,29 +1,39 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs'
 
-function createState<T>(initialState: T) {
-  type GetPartialState = (currentState: T) => Partial<T>;
+type State<T extends Record<string, unknown>> = ReturnType<typeof createState<T>>
+type ReadOnlyState<T extends Record<string, unknown>> = Omit<State<T>, 'update'>
 
-  const state$ = new BehaviorSubject<T>(initialState);
+function createState<T extends Record<string, unknown>>(initialState: T) {
+  type GetPartialState = (currentState: T) => Partial<T>
+
+  const state$ = new BehaviorSubject<T>(initialState)
 
   return {
     update(newState: Partial<T> | GetPartialState) {
-      let getNewState: GetPartialState;
+      let getNewState: GetPartialState
 
       if (typeof newState !== 'function') {
-        getNewState = () => newState;
+        getNewState = () => newState
       } else {
-        getNewState = newState;
+        getNewState = newState
       }
 
-      state$.next({ ...state$.value, ...getNewState(state$.value) });
+      state$.next({ ...state$.value, ...getNewState(state$.value) })
     },
     get() {
-      return state$.value;
+      return state$.value
     },
     asObservable() {
-      return state$.asObservable();
+      return state$.asObservable()
     },
-  };
+    readOnly() {
+      return {
+        get: () => state$.value,
+        asObservable: () => state$.asObservable(),
+      }
+    },
+  }
 }
 
-export { createState };
+export { createState }
+export type { State, ReadOnlyState }

@@ -94,7 +94,10 @@ const state = createState<State>({
   todos: [] as Todo[],
   text: '',
 })
-export { state }
+
+const readOnlyState = state.readOnly()
+
+export { readOnlyState as state }
 ```
 
 You can export this state and a component can subscribe to this state and update its internal state using it.
@@ -171,6 +174,15 @@ You can do the following with the State created with `createState`
 
   ```ts
   const state$ = state.asObservable()
+  ```
+
+- Get read-only state. The read-only state will support only `.get` and `.asObservable()`
+
+  ```ts
+  const readOnly = state.asObservable()
+
+  const state$ = readOnly.asObservable()
+  const currentState = readOnly.get()
   ```
 
 ## Example usage in an App
