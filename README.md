@@ -13,6 +13,7 @@
 
 - Use `npm login` and put the printed link in browser to login with npm
 - Update versions in package.json files
+- Build project with `npx nx build js`
 - To publush `js` package run `npx nx nx-release-publish js`
 
 ## Integrate with editors

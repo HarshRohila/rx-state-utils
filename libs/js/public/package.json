@@ -1,6 +1,6 @@
 {
   "name": "@rx-state-utils/js",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Utilities for State Management using RxJS",
   "dependencies": {},
   "main": "./index.js",
